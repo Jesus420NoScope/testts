@@ -14,7 +14,6 @@ import com.google.android.gms.common.config.GservicesValue.value
 import com.google.firebase.database.*
 import android.widget.Toast.makeText as makeText1
 
-
 class EtudiantQuestionnaire() : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
