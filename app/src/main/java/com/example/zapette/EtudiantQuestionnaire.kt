@@ -3,10 +3,14 @@ package com.example.zapette
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.Button
+import android.widget.EditText
 import android.widget.ImageView
 import android.widget.Toast
+import android.widget.Toast.LENGTH_LONG
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.gms.common.config.GservicesValue.value
 import com.google.firebase.database.*
 import android.widget.Toast.makeText as makeText1
 
@@ -21,42 +25,36 @@ class EtudiantQuestionnaire() : AppCompatActivity() {
         val ref_questionnaire = database.getReference("Questionnaire")
         val intent = Intent(this, MainActivity::class.java)
         val intent2 = Intent(this, EtudiantRepondre::class.java)
-
+        var codeUtilisateur = ""
+        var codeBDD = ""
+        var should = false
 
         val back_button = findViewById<ImageView>(R.id.button_back)
         back_button.setOnClickListener{
             startActivity(intent)
         }
 
+        //Récupérer le code saisi par l'utilisateur
+
 
         val buttonRejoindre = findViewById<Button>(R.id.button_rejoindre)
         buttonRejoindre.setOnClickListener{
 
-            /*
-            ecrire dans une bdd
+            val editText = findViewById<EditText>(R.id.zone_saisie_code)
+            val codesaisi = editText.text
+            //TODO: Si codesaisi vide, redémarrer l'activity avec message d'erreur vide
 
-            val myRef = database.getReference("Questionnaire")
-            myRef.setValue("9999")
-            */
+            ref_questionnaire.child("code").get().addOnSuccessListener {
+                codeBDD = it.value.toString()
+            }.addOnFailureListener{
+                Toast.makeText(applicationContext, "Ya pa de le code", LENGTH_LONG).show()
+            }
 
-            //lire dans une bdd
-            ref_questionnaire.addValueEventListener(object: ValueEventListener {
-                override fun onDataChange(snapshot: DataSnapshot) {
-                    if (snapshot.exists()){
-                        val code : Any?
-                        code = snapshot.getValue()
-                        Toast.makeText(applicationContext, code.toString().toInt(), Toast.LENGTH_SHORT).show()
-                    }
-                }
+            if (codeUtilisateur == codeBDD){
+                startActivity(intent2)
+            }
 
-                override fun onCancelled(error: DatabaseError) {
-                    startActivity(intent)
-                }
-            })
-
-            startActivity(intent2)
         }
-
 
     }
 
